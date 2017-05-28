@@ -1,7 +1,7 @@
 defmodule BioMonitor.UserController do
   use BioMonitor.Web, :controller
-
   alias BioMonitor.User
+  plug BioMonitor.Authentication, only: [:index, :show, :update, :delete]
 
   def index(conn, _params) do
     users = Repo.all(User)
