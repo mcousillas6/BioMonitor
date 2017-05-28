@@ -20,6 +20,7 @@ defmodule BioMonitor.User do
     |> validate_required([:first_name, :last_name, :email])
     |> validate_length(:email, min: 1, max: 255)
     |> validate_format(:email, ~r/@/)
+    |> unique_constraint(:email)
   end
 
   def registration_changeset(struct, params \\ %{}) do

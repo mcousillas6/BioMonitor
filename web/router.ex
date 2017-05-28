@@ -21,7 +21,9 @@ defmodule BioMonitor.Router do
 
   scope "/api", BioMonitor do
     pipe_through :api
-    resources "/sessions", SessionControlelr, only: [:create, :show, :delete]
+    post "/sessions/login", SessionController, :create
+    get "/sessions/current", SessionController, :show
+    delete "/sessions/logout", SessionController, :delete
     resources "/users", UserController, except: [:new, :edit]
   end
 end

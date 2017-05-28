@@ -17,59 +17,58 @@ defmodule BioMonitor.SessionController do
       user ->
         conn
         |> put_status(:unauthorized)
-        |> render("error.json")
+        |> render("401.json")
       true ->
         dummy_checkpw()
         conn
         |> put_status(:unauthorized)
-        |> render("error.json")
+        |> render("401.json")
     end
   end
 
   def show(conn, _params) do
-    token = conn.req_headers["access-token"]
+    {_, token} = List.keyfind(conn.req_headers, "access-token", 0)
     session = Repo.get_by(Session, token: token)
     cond do
-      session -> 
-        user = Repo.get(User, session.user_id)
+      token ->
         cond do
-          user -> 
-            conn
-            |> put_resp_header("access-token", session.token)
-            |> render(BioMonitor.UserView, "show.json", user: user)
+          session ->
+              Repo.preload(session, :user)
+              conn
+              |> put_resp_header("access-token", session.token)
+              |> render(BioMonitor.UserView, "show.json", user: session.user)
           true -> 
-            conn 
-            |> put_status(:not_found)
-            |> render(BioMonitor.ChangesetView, "error.json")
+            conn
+            |> put_status(:unauthorized)
+            |> render(BioMonitor.ErrorView, "401.json")
         end
-      true -> 
+      true ->
         conn
         |> put_status(:unauthorized)
-        |> render(BioMonitor.ChangesetView, "error.json")
-    end
+        |> render(BioMonitor.ErrorView, "401.json")
+    end 
   end
 
   def delete(conn, _params) do
-    token = conn.req_headers["access-token"]
-    session = Repo.get_by(Session, token: token) 
+    {_, token} = List.keyfind(conn.req_headers, "access-token", 0)
+    session = Repo.get_by(Session, token: token)
     cond do
-      session -> 
-        user = Repo.get(User, session.user_id)
+      token ->
         cond do
-          user -> 
-            Repo.delete! user
-            conn
-            |> put_status(:success)
-            |> render("delete.json", user: user)
+          session -> 
+              Repo.delete! session
+              conn
+              |> put_status(:ok)
+              |> render("delete.json")
           true -> 
-            conn 
-            |> put_status(:not_found)
-            |> render(BioMonitor.ChangesetView, "error.json")
+            conn
+            |> put_status(:unauthorized)
+            |> render(BioMonitor.ErrorView, "401.json")
         end
-      true -> 
+      true ->
         conn
         |> put_status(:unauthorized)
-        |> render(BioMonitor.ChangesetView, "error.json")
-    end
+        |> render(BioMonitor.ErrorView, "401.json")
+    end 
   end
 end
