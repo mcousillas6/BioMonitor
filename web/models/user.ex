@@ -7,7 +7,8 @@ defmodule BioMonitor.User do
     field :email, :string
     field :password_digest, :string
     field :password, :string, virtual: true
-
+    has_many :sessions, BioMonitor.Session, on_delete: :delete_all
+    
     timestamps()
   end
 
