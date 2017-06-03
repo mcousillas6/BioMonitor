@@ -9,3 +9,9 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+admin = BioMonitor.AdminUser.changeset(%BioMonitor.AdminUser{}, %{
+    email: "admin@admin.com",
+    password: "asdasdasd",
+    password_confirmation: "asdasdasd"
+    })
+  |> BioMonitor.Repo.insert!
