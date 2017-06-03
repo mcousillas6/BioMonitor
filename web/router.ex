@@ -1,5 +1,6 @@
 defmodule BioMonitor.Router do
   use BioMonitor.Web, :router
+  use ExAdmin.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -17,6 +18,11 @@ defmodule BioMonitor.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+  end
+
+  scope "/admin", ExAdmin do
+    pipe_through :browser
+    admin_routes()
   end
 
   scope "/api", BioMonitor do
