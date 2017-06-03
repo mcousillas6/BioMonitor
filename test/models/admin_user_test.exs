@@ -3,7 +3,11 @@ defmodule BioMonitor.AdminUserTest do
 
   alias BioMonitor.AdminUser
 
-  @valid_attrs %{email: "some content"}
+  @valid_attrs %{
+    email: "admin@admin.com",
+    password: "asdasdasd",
+    password_confirmation: "asdasdasd"
+  }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

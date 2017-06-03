@@ -1,7 +1,7 @@
-defmodule BioMonitor.AuthenticationTest do
+defmodule BioMonitor.AuthenticationPlugTest do
   use BioMonitor.ConnCase
-  alias BioMonitor.{Authentication, Repo, User, Session}
-  @opts Authentication.init([])
+  alias BioMonitor.{AuthenticationPlug, Repo, User, Session}
+  @opts AuthenticationPlug.init([])
   @user_attrs %{email: "p@p.com", first_name: "Pedro", last_name: "Perez", password: "asdasd"}
 
   def put_auth_token_in_header(conn, token) do
@@ -15,21 +15,21 @@ defmodule BioMonitor.AuthenticationTest do
 
     conn = conn
     |> put_auth_token_in_header(session.token)
-    |> Authentication.call(@opts)
+    |> AuthenticationPlug.call(@opts)
     assert conn.assigns.current_user
   end
 
   test "invalid token", %{conn: conn} do
     conn = conn
     |> put_auth_token_in_header("foo")
-    |> Authentication.call(@opts)
+    |> AuthenticationPlug.call(@opts)
 
     assert conn.status == 401
     assert conn.halted
   end
 
   test "no token", %{conn: conn} do
-    conn = Authentication.call(conn, @opts)
+    conn = AuthenticationPlug.call(conn, @opts)
     assert conn.status == 401
     assert conn.halted
   end

@@ -28,7 +28,8 @@ config :ex_admin,
   module: BioMonitor,
   modules: [
     BioMonitor.ExAdmin.Dashboard,
-    BioMonitor.ExAdmin.User
+    BioMonitor.ExAdmin.User,
+    BioMonitor.ExAdmin.AdminUser
   ]
 
 # %% Coherence Configuration %%   Don't remove this line
@@ -36,7 +37,7 @@ config :coherence,
   user_schema: BioMonitor.AdminUser,
   repo: BioMonitor.Repo,
   module: BioMonitor,
-  logged_out_url: "/",
+  logged_out_url: "/admin",
   opts: [:authenticatable]
 # %% End Coherence Configuration %%
 

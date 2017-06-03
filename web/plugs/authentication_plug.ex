@@ -1,4 +1,4 @@
-defmodule BioMonitor.Authentication do
+defmodule BioMonitor.AuthenticationPlug do
   import Plug.Conn
   import Ecto.Query, only: [from: 2]
   alias BioMonitor.{Repo, User, Session}
