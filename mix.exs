@@ -43,7 +43,7 @@ defmodule BioMonitor.Mixfile do
       {:comeonin, "~> 3.0", override: true},
       {:secure_random, "~> 0.5"},
       {:cowboy, "~> 1.0"},
-      {:faker, "~> 0.8",  only: [:dev, :test]},
+      {:faker, "~> 0.8"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:nerves_uart, "~> 0.1"},
       {:csv, "~> 2.0.0"},
