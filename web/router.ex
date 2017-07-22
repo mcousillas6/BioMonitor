@@ -52,5 +52,8 @@ defmodule BioMonitor.Router do
     get "/sessions/current", SessionController, :show
     delete "/sessions/logout", SessionController, :delete
     resources "/users", UserController, except: [:new, :edit]
+    resources "/routines", RoutineController, except: [:new, :edit] do
+      resources "/readings", ReadingController, only: [:index]
+    end
   end
 end

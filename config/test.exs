@@ -14,7 +14,7 @@ config :bio_monitor, BioMonitor.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
-  database: "bio_monitor_test",
+  database: "bio_monitor_cloud_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 

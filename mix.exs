@@ -19,7 +19,7 @@ defmodule BioMonitor.Mixfile do
   def application do
     [mod: {BioMonitor, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :coherence]]
+                    :phoenix_ecto, :postgrex, :coherence, :faker]]
   end
 
   # Specifies which paths to compile per environment.
@@ -30,18 +30,25 @@ defmodule BioMonitor.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.2.4"},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.0"},
-     {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.6"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:ex_admin, github: "smpallen99/ex_admin"},
-     {:coherence, "~> 0.3"},
-     {:gettext, "~> 0.11"},
-     {:comeonin, "~> 3.0", override: true},
-     {:secure_random, "~> 0.5"},
-     {:cowboy, "~> 1.0"}]
+    [
+      {:phoenix, "~> 1.2.4"},
+      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix_ecto, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"},
+      {:phoenix_html, "~> 2.6"},
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:ex_admin, github: "smpallen99/ex_admin"},
+      {:coherence, "~> 0.3"},
+      {:gettext, "~> 0.11"},
+      {:comeonin, "~> 3.0", override: true},
+      {:secure_random, "~> 0.5"},
+      {:cowboy, "~> 1.0"},
+      {:faker, "~> 0.8",  only: [:dev, :test]},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:nerves_uart, "~> 0.1"},
+      {:csv, "~> 2.0.0"},
+      {:cors_plug, "~> 1.2"},
+    ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

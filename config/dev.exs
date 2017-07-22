@@ -38,6 +38,6 @@ config :bio_monitor, BioMonitor.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
-  database: "bio_monitor_dev",
+  database: "bio_monitor_cloud_dev",
   hostname: "localhost",
   pool_size: 10
