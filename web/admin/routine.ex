@@ -2,7 +2,7 @@ defmodule BioMonitor.ExAdmin.Routine do
   use ExAdmin.Register
 
   register_resource BioMonitor.Routine do
-    create_changeset :registration_changeset
+    create_changeset :changeset
 
     form routine do
       inputs do

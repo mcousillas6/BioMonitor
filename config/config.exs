@@ -29,7 +29,8 @@ config :ex_admin,
   modules: [
     BioMonitor.ExAdmin.Dashboard,
     BioMonitor.ExAdmin.User,
-    BioMonitor.ExAdmin.AdminUser
+    BioMonitor.ExAdmin.AdminUser,
+    BioMonitor.ExAdmin.Routine
   ]
 
 # %% Coherence Configuration %%   Don't remove this line
