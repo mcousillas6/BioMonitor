@@ -48,10 +48,15 @@ defmodule BioMonitor.Router do
 
   scope "/api", BioMonitor do
     pipe_through :api
+
     post "/sessions/login", SessionController, :create
     get "/sessions/current", SessionController, :show
     delete "/sessions/logout", SessionController, :delete
+
     resources "/users", UserController, except: [:new, :edit]
+
+    post "/routines/stop", RoutineController, :stop
+    post "/routines/start", RoutineController, :start
     resources "/routines", RoutineController, except: [:new, :edit] do
       resources "/readings", ReadingController, only: [:index]
     end
