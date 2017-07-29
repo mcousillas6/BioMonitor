@@ -2,6 +2,7 @@ defmodule BioMonitor.RoutineController do
   use BioMonitor.Web, :controller
 
   alias BioMonitor.Routine
+  alias BioMonitor.Endpoint
 
   def index(conn, _params) do
     routines = Repo.all(Routine)
@@ -10,7 +11,6 @@ defmodule BioMonitor.RoutineController do
 
   def create(conn, %{"routine" => routine_params}) do
     changeset = Routine.changeset(%Routine{}, routine_params)
-
     case Repo.insert(changeset) do
       {:ok, routine} ->
         conn
@@ -32,7 +32,6 @@ defmodule BioMonitor.RoutineController do
   def update(conn, %{"id" => id, "routine" => routine_params}) do
     routine = Repo.get!(Routine, id)
     changeset = Routine.changeset(routine, routine_params)
-
     case Repo.update(changeset) do
       {:ok, routine} ->
         render(conn, "show.json", routine: routine)
@@ -45,11 +44,18 @@ defmodule BioMonitor.RoutineController do
 
   def delete(conn, %{"id" => id}) do
     routine = Repo.get!(Routine, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
     Repo.delete!(routine)
-
     send_resp(conn, :no_content, "")
+  end
+
+  def stop(conn, _params) do
+    Endpoint.broadcast("sync", "stopped", %{})
+    send_resp(conn, :no_content, "")
+  end
+
+  def start(conn, %{"id" => id}) do
+    routine = Repo.get!(Routine, id)
+    Endpoint.broadcast("sync", "start", %{id: routine.id})
+    render(conn, "show.json", routine: routine)
   end
 end
