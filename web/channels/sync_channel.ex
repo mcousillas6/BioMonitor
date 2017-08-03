@@ -9,7 +9,7 @@ defmodule BioMonitor.SyncChannel do
   @started_msg "start"
   @stopped_msg "stopped"
   @update_msg "update"
-  @alert_msg "alert"
+  @alert_msg "erro"
   @routine_channel "routine"
 
   def join("sync", payload, socket) do
