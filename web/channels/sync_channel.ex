@@ -9,7 +9,8 @@ defmodule BioMonitor.SyncChannel do
   @started_msg "start"
   @stopped_msg "stopped"
   @update_msg "update"
-  @alert_msg "erro"
+  @status_msg "status"
+  @alert_msg "error"
   @routine_channel "routine"
 
   def join("sync", payload, socket) do
@@ -41,6 +42,11 @@ defmodule BioMonitor.SyncChannel do
         _ -> {:reply, :error, socket}
       end
     {:reply, :ok, socket}
+  end
+
+  def handle_in(@status_msg, payload, socket) do
+      Endpoint.broadcast(@routine_channel, @update_msg, payload)
+      {:reply, :ok, socket}
   end
 
   def handle_in(@alert_msg, payload, socket) do
