@@ -4,9 +4,10 @@ defmodule BioMonitor.SyncChannel do
   """
   use BioMonitor.Web, :channel
   alias BioMonitor.Reading
+  alias BioMonitor.Routine
   alias BioMonitor.Endpoint
 
-  @started_msg "start"
+  @started_msg "started"
   @stopped_msg "stopped"
   @update_msg "update"
   @status_msg "status"
