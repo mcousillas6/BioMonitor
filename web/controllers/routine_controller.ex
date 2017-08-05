@@ -13,6 +13,7 @@ defmodule BioMonitor.RoutineController do
     changeset = Routine.changeset(%Routine{}, routine_params)
     case Repo.insert(changeset) do
       {:ok, routine} ->
+        Endpoint.broadcast("sync", "new_routine", routine_params)
         conn
         |> put_status(:created)
         |> put_resp_header("location", routine_path(conn, :show, routine))
@@ -29,11 +30,12 @@ defmodule BioMonitor.RoutineController do
     render(conn, "show.json", routine: routine)
   end
 
-  def update(conn, %{"id" => id, "routine" => routine_params}) do
+  def update(conn, %{"id" => id, "routine" => routine_params} = params) do
     routine = Repo.get!(Routine, id)
     changeset = Routine.changeset(routine, routine_params)
     case Repo.update(changeset) do
       {:ok, routine} ->
+        Endpoint.broadcast("sync", "update_routine", params)
         render(conn, "show.json", routine: routine)
       {:error, changeset} ->
         conn
@@ -45,6 +47,7 @@ defmodule BioMonitor.RoutineController do
   def delete(conn, %{"id" => id}) do
     routine = Repo.get!(Routine, id)
     Repo.delete!(routine)
+    Endpoint.broadcast("sync", "delete_routine", %{id: id})
     send_resp(conn, :no_content, "")
   end
 
