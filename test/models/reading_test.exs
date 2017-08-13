@@ -3,7 +3,7 @@ defmodule BioMonitor.ReadingTest do
 
   alias BioMonitor.Reading
 
-  @valid_attrs %{co2: "120.5", density: "120.5", ph: "120.5", temp: "120.5"}
+  @valid_attrs %{co2: "120.5", density: "120.5", ph: "120.5", temp: "120.5", routine_id: "1"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

@@ -13,6 +13,9 @@ defmodule BioMonitor.SyncChannel do
   @status_msg "status"
   @alert_msg "error"
   @crud_error "crud_error"
+  @new_routine_msg "new_routine"
+  @update_routine_msg "update_routine"
+  @delete_routine_msg "delete_routine"
   @routine_channel "routine"
 
   def join("sync", payload, socket) do
@@ -25,17 +28,17 @@ defmodule BioMonitor.SyncChannel do
 
   def handle_in(
     @update_msg, %{
-      "routine_id" => routine_id,
+      "routine_id" => _routine_id,
+      "routine_uuid" => routine_uuid,
       "id" => _id,
       "temp" => temp,
       "inserted_at" => _inserted_at
     },
     socket) do
-    IO.puts("Received new reading for routine: #{routine_id}")
-      with routine = Repo.get(Routine, routine_id),
+      with routine = Repo.get_by(Routine, uuid: routine_uuid),
         true <- routine != nil,
         reading <- Ecto.build_assoc(routine, :readings),
-        changeset <- Reading.changeset(reading, %{routine_id: routine_id, temp: temp}),
+        changeset <- Reading.changeset(reading, %{routine_id: routine.id, temp: temp}),
         {:ok, reading} <- Repo.insert(changeset)
       do
         Endpoint.broadcast(@routine_channel, @update_msg, reading_to_map(reading))
@@ -45,6 +48,43 @@ defmodule BioMonitor.SyncChannel do
       end
     {:reply, :ok, socket}
   end
+
+  def handle_in(@update_routine_msg, routine_params, socket) do
+    with routine = Repo.get_by(Routine, uuid: routine_params.uuid),
+      true <- routine != nil,
+      changeset = Routine.changeset(routine, routine_params),
+      {:ok, _routine} <- Repo.update(changeset)
+    do
+      {:reply, :ok, socket}
+    else
+      {:error, _changeset} ->
+        {:reply, :ok, socket}
+    end
+  end
+
+  def handle_in(@delete_routine_msg, %{"uuid" => uuid}, socket) do
+    with routine = Repo.get_by!(Routine, uuid: uuid),
+      true <- routine != nil,
+      {:ok, _struct} <- Repo.delete(routine)
+    do
+      {:reply, :ok, socket}
+    else
+      _ ->
+        IO.puts("Failed to delete routine")
+        {:reply, :error, socket}
+    end
+  end
+
+  def handle_in(@new_routine_msg, routine_params, socket) do
+    changeset = Routine.changeset(%Routine{}, routine_params)
+    case Repo.insert(changeset) do
+      {:ok, _routine} ->
+        {:reply, :ok, socket}
+      {:error, _changeset} ->
+        {:reply, :ok, socket}
+    end
+  end
+
 
   def handle_in(@status_msg, payload, socket) do
       Endpoint.broadcast(@routine_channel, @update_msg, payload)
@@ -68,7 +108,7 @@ defmodule BioMonitor.SyncChannel do
 
   def handle_in(@crud_error, payload, socket) do
     Endpoint.broadcast(@routine_channel, @crud_error, payload)
-    {:reply, :ok, :socket}
+    {:reply, :ok, socket}
   end
 
   def handle_out(@started_msg, routine, socket) do

@@ -31,8 +31,8 @@ defmodule BioMonitor.RoutineChannel do
     {:noreply, socket}
   end
 
-  def handle_out("crud_error", paylod, socket) do
-    push socket, crud_error, paylod
+  def handle_out("crud_error", payload, socket) do
+    push socket, "crud_error", payload
     {:noreply, socket}
   end
 end
