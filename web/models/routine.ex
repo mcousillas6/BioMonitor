@@ -10,6 +10,7 @@ defmodule BioMonitor.Routine do
     field :target_density, :float
     field :estimated_time_seconds, :float
     field :extra_notes, :string
+    field :uuid, :string
     has_many :readings, BioMonitor.Reading
 
     timestamps()
@@ -22,5 +23,14 @@ defmodule BioMonitor.Routine do
     struct
     |> cast(params, [:title, :strain, :medium, :target_temp, :target_ph, :target_density, :estimated_time_seconds, :extra_notes])
     |> validate_required([:title, :strain, :medium, :target_temp, :target_ph, :target_density, :estimated_time_seconds, :extra_notes])
+    |> generate_uuid
+  end
+
+  defp generate_uuid(changeset) do
+    case changeset.data.uuid == nil && Map.get(changeset.params, :uuid) == nil do
+      true ->
+        put_change(changeset, :uuid, UUID.uuid1())
+      false -> changeset
+    end
   end
 end
