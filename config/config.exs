@@ -22,6 +22,10 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :rummage_ecto,
+  Rummage.Ecto,
+  default_repo: BioMonitor.Repo
+
 # Config ExAdmin
 config :ex_admin,
   repo: BioMonitor.Repo,
