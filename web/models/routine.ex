@@ -21,16 +21,19 @@ defmodule BioMonitor.Routine do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :strain, :medium, :target_temp, :target_ph, :target_density, :estimated_time_seconds, :extra_notes])
+    |> cast(params, [:title, :strain, :medium, :target_temp, :target_ph, :target_density, :estimated_time_seconds, :extra_notes, :uuid])
     |> validate_required([:title, :strain, :medium, :target_temp, :target_ph, :target_density, :estimated_time_seconds, :extra_notes])
     |> generate_uuid
   end
 
   defp generate_uuid(changeset) do
-    case changeset.data.uuid == nil && Map.get(changeset.params, :uuid) == nil do
-      true ->
-        put_change(changeset, :uuid, UUID.uuid1())
-      false -> changeset
+    with true <- changeset.data.uuid == nil,
+      true <- Map.get(changeset.params, "uuid") == nil
+    do
+      IO.puts("===here====")
+      put_change(changeset, :uuid, UUID.uuid1())
+    else
+      _ -> changeset
     end
   end
 end
