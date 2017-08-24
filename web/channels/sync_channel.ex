@@ -32,13 +32,15 @@ defmodule BioMonitor.SyncChannel do
       "routine_uuid" => routine_uuid,
       "id" => _id,
       "temp" => temp,
+      "density" => density,
+      "ph" => ph,
       "inserted_at" => _inserted_at
     },
     socket) do
       with routine = Repo.get_by(Routine, uuid: routine_uuid),
         true <- routine != nil,
         reading <- Ecto.build_assoc(routine, :readings),
-        changeset <- Reading.changeset(reading, %{routine_id: routine.id, temp: temp}),
+        changeset <- Reading.changeset(reading, %{routine_id: routine.id, temp: temp, ph: ph, density: density}),
         {:ok, reading} <- Repo.insert(changeset)
       do
         Endpoint.broadcast(@routine_channel, @update_msg, reading_to_map(reading))
@@ -139,6 +141,8 @@ defmodule BioMonitor.SyncChannel do
       routine_id: reading.routine_id,
       id: reading.id,
       temp: reading.temp,
+      ph: reading.ph,
+      density: reading.density,
       inserted_at: reading.inserted_at
     }
   end
