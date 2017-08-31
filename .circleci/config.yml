@@ -7,11 +7,7 @@ jobs:
       - image: postgres:9.4.1
         environment:
           POSTGRES_USER: ubuntu
-    branches:
-      ignore:
-        - gh-pages
     steps:
-      - checkout
       - run: mix deps.get
       - run: mix ecto.create
       - run: mix test
