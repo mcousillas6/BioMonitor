@@ -1,8 +1,13 @@
 defmodule BioMonitor.RoutineControllerTest do
   use BioMonitor.ConnCase
 
+  @moduledoc """
+    Test cases for RoutineController
+  """
+
   alias BioMonitor.Routine
-  @valid_attrs %{estimated_time_seconds: "120.5", extra_notes: "some content", medium: "some content", strain: "some content", target_density: "120.5", target_ph: "120.5", target_temp: "120.5", title: "some content"}
+  alias Ecto.DateTime, as: DateTime
+  @valid_attrs %{title: Faker.File.file_name(), estimated_time_seconds: "#{Faker.Commerce.price()}", extra_notes: Faker.File.file_name(), medium: Faker.Beer.name(), strain: Faker.Beer.malt(), target_co2: "#{Faker.Commerce.price()}", target_density: "#{Faker.Commerce.price()}", target_ph: "#{Faker.Commerce.price()}", target_temp: "#{Faker.Commerce.price()}", temp_tolerance: 2, ph_tolerance: 0.6, loop_delay: 5_000, balance_ph: true, trigger_after: 20_000, trigger_for: 60_000 }
   @invalid_attrs %{}
 
   setup %{conn: conn} do
@@ -15,18 +20,31 @@ defmodule BioMonitor.RoutineControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    routine = Repo.insert! %Routine{}
+    routine = Repo.insert! Routine.changeset(%Routine{}, @valid_attrs)
     conn = get conn, routine_path(conn, :show, routine)
-    assert json_response(conn, 200)["data"] == %{"id" => routine.id,
+    assert json_response(conn, 200)["data"] == %{
+      "id" => routine.id,
+      "uuid" => routine.uuid,
       "title" => routine.title,
       "strain" => routine.strain,
       "medium" => routine.medium,
       "target_temp" => routine.target_temp,
       "target_ph" => routine.target_ph,
+      "target_co2" => routine.target_co2,
       "target_density" => routine.target_density,
       "estimated_time_seconds" => routine.estimated_time_seconds,
       "extra_notes" => routine.extra_notes,
-      "uuid" => routine.uuid
+      "started" => false,
+      "started_date" => routine.started_date,
+      "ph_tolerance" => routine.ph_tolerance,
+      "temp_tolerance" => routine.temp_tolerance,
+      "balance_ph" => routine.balance_ph,
+      "loop_delay" => routine.loop_delay,
+      "inserted_at" => to_date_string(routine.inserted_at),
+      "updated_at" => to_date_string(routine.updated_at),
+      "temp_ranges" => [],
+      "trigger_after" => routine.trigger_after,
+      "trigger_for" => routine.trigger_for,
     }
   end
 
@@ -65,5 +83,10 @@ defmodule BioMonitor.RoutineControllerTest do
     conn = delete conn, routine_path(conn, :delete, routine)
     assert response(conn, 204)
     refute Repo.get(Routine, routine.id)
+  end
+
+  defp to_date_string(date) do
+    {:ok, date_time} = date |> DateTime.cast
+    date_time |> DateTime.to_iso8601
   end
 end
