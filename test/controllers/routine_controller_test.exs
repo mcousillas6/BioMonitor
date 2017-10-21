@@ -25,7 +25,9 @@ defmodule BioMonitor.RoutineControllerTest do
       "target_ph" => routine.target_ph,
       "target_density" => routine.target_density,
       "estimated_time_seconds" => routine.estimated_time_seconds,
-      "extra_notes" => routine.extra_notes}
+      "extra_notes" => routine.extra_notes,
+      "uuid" => routine.uuid
+    }
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
