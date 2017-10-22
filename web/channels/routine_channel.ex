@@ -5,7 +5,7 @@ defmodule BioMonitor.RoutineChannel do
      * Errors.
   """
   use BioMonitor.Web, :channel
-  intercept(["update", "alert", "started", "stopped", "crud_error"])
+  intercept(["update", "alert", "started", "stopped"])
 
   def join("routine", _payload, socket) do
     {:ok, socket}
@@ -28,11 +28,6 @@ defmodule BioMonitor.RoutineChannel do
 
   def handle_out("stopped", payload, socket) do
     push socket, "stopped", payload
-    {:noreply, socket}
-  end
-
-  def handle_out("crud_error", payload, socket) do
-    push socket, "crud_error", payload
     {:noreply, socket}
   end
 end
