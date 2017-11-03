@@ -12,9 +12,15 @@ defmodule BioMonitor.RoutineController do
         "paginate" => %{
           "per_page" => @routines_per_page,
           "page" => "#{params["page"] || 1}"
+        },
+        "search" => %{
+          "title" => %{"assoc" => [], "search_type" => "ilike", "search_term" => params["title"]},
+          "strain" => %{"assoc" => [], "search_type" => "ilike", "search_term" => params["strain"]},
+          "medium" => %{"assoc" => [], "search_type" => "ilike", "search_term" => params["medium"]},
+          "value" => %{"assoc" => ["tags"], "search_type" => "ilike", "search_term" => params["tag"]}
         }
       })
-    routines = Repo.all(routines) |> Repo.preload(:temp_ranges)
+    routines = Repo.all(routines) |> Repo.preload([:temp_ranges, :tags])
     render(conn, "index.json", routine: routines, page_info: rummage)
   end
 
@@ -22,7 +28,7 @@ defmodule BioMonitor.RoutineController do
     changeset = Routine.changeset(%Routine{}, routine_params)
     case Repo.insert(changeset) do
       {:ok, routine} ->
-        routine = routine |> Repo.preload(:temp_ranges)
+        routine = routine |> Repo.preload([:temp_ranges, :tags])
         conn
         |> put_status(:created)
         |> put_resp_header("location", routine_path(conn, :show, routine))
@@ -35,12 +41,12 @@ defmodule BioMonitor.RoutineController do
   end
 
   def show(conn, %{"id" => id}) do
-    routine = Repo.get!(Routine, id) |> Repo.preload(:temp_ranges)
+    routine = Repo.get!(Routine, id) |> Repo.preload([:temp_ranges, :tags])
     render(conn, "show.json", routine: routine)
   end
 
   def update(conn, %{"id" => id, "routine" => routine_params}) do
-    routine = Repo.get!(Routine, id) |> Repo.preload(:temp_ranges)
+    routine = Repo.get!(Routine, id) |> Repo.preload([:temp_ranges, :tags])
     changeset = Routine.changeset(routine, routine_params)
     case Repo.update(changeset) do
       {:ok, routine} ->
