@@ -2,15 +2,13 @@ defmodule BioMonitor.ReadingController do
   use BioMonitor.Web, :controller
 
   alias BioMonitor.Routine
-  alias BioMonitor.Reading
-  @readings_per_page "30"
 
-  def index(conn, %{"routine_id" => routine_id} = params) do
+  def index(conn, %{"routine_id" => routine_id}) do
     with routine = Repo.get(Routine, routine_id),
       true <- routine != nil
     do
       routine = Repo.preload(routine, :readings)
-      render(conn, "index.json", readings: routine.readings)
+      conn |> render("index.json", %{readings: routine.readings})
     else
       false ->
         conn

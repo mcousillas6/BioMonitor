@@ -35,8 +35,18 @@ defmodule BioMonitor.RoutineView do
       balance_ph: routine.balance_ph,
       loop_delay: routine.loop_delay,
       temp_tolerance: routine.temp_tolerance,
-      temp_ranges: render_temp_ranges(routine)
+      temp_ranges: render_temp_ranges(routine),
+      tags: render_tags(routine),
+      trigger_for: routine.trigger_for,
+      trigger_after: routine.trigger_after,
     }
+  end
+
+  defp render_tags(routine) do
+    routine.tags
+    |> Enum.map(fn tag ->
+      %{value: tag.value}
+    end)
   end
 
   defp render_temp_ranges(routine) do
