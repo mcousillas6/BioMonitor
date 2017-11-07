@@ -9,6 +9,7 @@ defmodule BioMonitor.Repo.Migrations.CreateRoutine do
       add :target_temp, :float
       add :target_ph, :float
       add :target_density, :float
+      add :target_co2, :float
       add :estimated_time_seconds, :float
       add :extra_notes, :string
 

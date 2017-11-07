@@ -1,9 +1,12 @@
 defmodule BioMonitor.RoutineTest do
   use BioMonitor.ModelCase
+  @moduledoc """
+    Test cases for ph controller
+  """
 
   alias BioMonitor.Routine
 
-  @valid_attrs %{estimated_time_seconds: "120.5", extra_notes: "some content", medium: "some content", strain: "some content", target_density: "120.5", target_ph: "120.5", target_temp: "120.5", title: "some content"}
+  @valid_attrs %{title: Faker.File.file_name(), estimated_time_seconds: "#{Faker.Commerce.price()}", extra_notes: Faker.File.file_name(), medium: Faker.Beer.name(), strain: Faker.Beer.malt(), target_co2: "#{Faker.Commerce.price()}", target_density: "#{Faker.Commerce.price()}", target_ph: "#{Faker.Commerce.price()}", target_temp: "#{Faker.Commerce.price()}"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
