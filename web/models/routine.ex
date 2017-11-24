@@ -25,6 +25,7 @@ defmodule BioMonitor.Routine do
     field :trigger_for, :integer
     has_many :readings, BioMonitor.Reading, on_delete: :delete_all
     has_many :temp_ranges, BioMonitor.TempRange, on_delete: :delete_all
+    has_many :log_entries, BioMonitor.LogEntry, on_delete: :delete_all
     has_many :tags, BioMonitor.Tag, on_delete: :delete_all
 
     timestamps()
@@ -38,6 +39,7 @@ defmodule BioMonitor.Routine do
     |> cast(params, [:title, :strain, :medium, :target_temp, :target_ph, :target_co2, :target_density, :estimated_time_seconds, :extra_notes, :uuid, :temp_tolerance, :ph_tolerance, :loop_delay, :balance_ph, :trigger_after, :trigger_for])
     |> cast_assoc(:temp_ranges, required: false)
     |> cast_assoc(:tags, required: false)
+    |> cast_assoc(:log_entries, required: false)
     |> validate_required([:title, :strain, :medium, :target_temp, :target_ph, :target_density, :estimated_time_seconds])
     |> generate_uuid
   end

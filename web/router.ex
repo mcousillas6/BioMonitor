@@ -59,6 +59,7 @@ defmodule BioMonitor.Router do
     post "/routines/start", RoutineController, :start
     resources "/routines", RoutineController, except: [:new, :edit] do
       resources "/readings", ReadingController, only: [:index]
+      resources "/log_entries", LogEntryController, only: [:index]
       delete "/sync_delete", RoutineController, :sync_delete
       put "/sync_update", RoutineController, :sync_update
     end
