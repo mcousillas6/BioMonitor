@@ -5,7 +5,6 @@ defmodule BioMonitor.ReadingControllerTest do
   alias BioMonitor.Reading
 
   @routine_valid_attrs %{title: Faker.File.file_name(), estimated_time_seconds: "#{Faker.Commerce.price()}", extra_notes: Faker.File.file_name(), medium: Faker.Beer.name(), strain: Faker.Beer.malt(), target_co2: "#{Faker.Commerce.price()}", target_density: "#{Faker.Commerce.price()}", target_ph: "#{Faker.Commerce.price()}", target_temp: "#{Faker.Commerce.price()}"}
-  @valid_attrs %{co2: "120.5", density: "120.5", ph: "120.5", temp: "120.5"}
   @invalid_attrs %{}
 
   setup %{conn: conn} do

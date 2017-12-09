@@ -42,6 +42,14 @@ defmodule BioMonitor.RoutineView do
     }
   end
 
+  def render("unavailable.json", _assigns) do
+    %{error: "El fermentador está trabajando en otro experimento en este momento."}
+  end
+
+  def render("already_run.json", _assigns) do
+    %{error: "El experimento ya fue corrido."}
+  end
+  
   defp render_tags(routine) do
     routine.tags
     |> Enum.map(fn tag ->
