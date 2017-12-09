@@ -64,6 +64,28 @@ defmodule BioMonitor.RoutineController do
     send_resp(conn, :no_content, "")
   end
 
+  def to_csv(conn, %{"routine_id" => id}) do
+    routine =
+      Routine
+      |> Repo.get!(id)
+      |> Repo.preload(:readings)
+
+    path = "#{routine.title}_readings.csv"
+    file = File.open!(Path.expand(path), [:write, :utf8])
+
+    routine.readings
+      |> CSV.encode(headers: [:temp, :ph, :density, :product, :biomass, :inserted_at])
+      |> Enum.each(&IO.write(file, &1))
+
+    conn = conn
+      |> put_resp_header("Content-Disposition", "attachment; filename=#{path}")
+      |> send_file(200, path)
+
+    File.close(file)
+    File.rm(path)
+    conn
+  end
+
   def stop(conn, _params) do
     Endpoint.broadcast("sync", "stopped", %{})
     send_resp(conn, :no_content, "")
