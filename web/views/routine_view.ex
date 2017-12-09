@@ -49,7 +49,7 @@ defmodule BioMonitor.RoutineView do
   def render("already_run.json", _assigns) do
     %{error: "El experimento ya fue corrido."}
   end
-
+  
   defp render_tags(routine) do
     routine.tags
     |> Enum.map(fn tag ->
