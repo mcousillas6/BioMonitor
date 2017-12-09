@@ -1,11 +1,16 @@
 defmodule BioMonitor.Reading do
   use BioMonitor.Web, :model
 
+  @moduledoc """
+    Reading model used to register metrics from the micro controller.
+  """
+
   schema "readings" do
     field :temp, :float
     field :ph, :float
-    field :co2, :float
-    field :density, :float
+    field :biomass, :float
+    field :product, :float
+    field :substratum, :float
     belongs_to :routine, BioMonitor.Routine
 
     timestamps()
@@ -16,7 +21,7 @@ defmodule BioMonitor.Reading do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:temp, :ph, :co2, :density, :routine_id])
+    |> cast(params, [:temp, :ph, :biomass, :substratum, :product, :routine_id])
     |> validate_required([:temp, :routine_id])
   end
 end
