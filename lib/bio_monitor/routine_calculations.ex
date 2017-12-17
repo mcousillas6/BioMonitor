@@ -119,12 +119,14 @@ defmodule BioMonitor.RoutineCalculations do
           nil ->
             acc |> List.insert_at(-1, %PartialResult{x: time, y: (reading.biomass / reading.substratum), reading: reading})
           last ->
+            d_substratum = (reading.substratum - last.reading.substratum)
+            y_value = if d_substratum == 0, do: 0, else: ((reading.biomass - last.reading.biomass) / d_substratum)
             acc
             |> List.insert_at(
               -1,
               %PartialResult{
                 x: time,
-                y: (reading.biomass - last.reading.biomass) / (reading.substratum - last.reading.substratum),
+                y: y_value,
                 reading: reading
               }
             )
@@ -151,12 +153,14 @@ defmodule BioMonitor.RoutineCalculations do
           nil ->
             acc |> List.insert_at(-1, %PartialResult{x: time, y: (reading.biomass / reading.product), reading: reading})
           last ->
+            d_product = (reading.product - last.reading.product)
+            y_value = if d_product == 0, do: 0, else: ((reading.biomass - last.reading.biomass) / d_product)
             acc
             |> List.insert_at(
               -1,
               %PartialResult{
                 x: time,
-                y: (reading.biomass - last.reading.biomass) / (reading.product - last.reading.product),
+                y: y_value,
                 reading: reading
               }
             )
@@ -183,12 +187,14 @@ defmodule BioMonitor.RoutineCalculations do
           nil ->
             acc |> List.insert_at(-1, %PartialResult{x: time, y: (reading.product / reading.biomass), reading: reading})
           last ->
+            d_biomass = (reading.biomass - last.reading.biomass)
+            y_value = if d_biomass == 0, do: 0, else: ((reading.product - last.reading.product) / d_biomass)
             acc
             |> List.insert_at(
               -1,
               %PartialResult{
                 x: time,
-                y: (reading.product - last.reading.product) / (reading.biomass - last.reading.biomass),
+                y: y_value,
                 reading: reading
               }
             )
@@ -212,14 +218,17 @@ defmodule BioMonitor.RoutineCalculations do
         time = NaiveDateTime.diff(reading.inserted_at, started_timestamp)
         case last_value do
           nil ->
-            acc |> List.insert_at(-1, %PartialResult{x: time, y: (reading.product / time), reading: reading})
+            y_value = if time == 0, do: reading.product, else: (reading.product / time)
+            acc |> List.insert_at(-1, %PartialResult{x: time, y: y_value, reading: reading})
           last ->
+            d_time = time - last.x
+            y_value = if d_time == 0, do: 0, else: (reading.product - last.reading.product) / d_time
             acc
             |> List.insert_at(
               -1,
               %PartialResult{
                 x: time,
-                y: (reading.product - last.reading.product) / (time - last.x),
+                y: y_value,
                 reading: reading
               }
             )
@@ -243,14 +252,17 @@ defmodule BioMonitor.RoutineCalculations do
         time = NaiveDateTime.diff(reading.inserted_at, started_timestamp)
         case last_value do
           nil ->
-            acc |> List.insert_at(-1, %PartialResult{x: time, y: (reading.biomass / time), reading: reading})
+            y_value = if time == 0, do: 0, else: (reading.biomass / time)
+            acc |> List.insert_at(-1, %PartialResult{x: time, y: y_value, reading: reading})
           last ->
+            d_time = time - last.x
+            y_value = if d_time == 0, do: 0, else: (reading.biomass - last.reading.biomass) / (time - last.x)
             acc
             |> List.insert_at(
               -1,
               %PartialResult{
                 x: time,
-                y: (reading.biomass - last.reading.biomass) / (time - last.x),
+                y: y_value,
                 reading: reading
               }
             )
