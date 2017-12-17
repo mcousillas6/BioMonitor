@@ -60,9 +60,11 @@ defmodule BioMonitor.Router do
     resources "/routines", RoutineController, except: [:new, :edit] do
       resources "/readings", ReadingController, only: [:index]
       get "/readings/calculations", ReadingController, :calculations
+      get "/readings/calculations_to_csv", ReadingController, :calculations_to_csv
       resources "/log_entries", LogEntryController, only: [:index]
       delete "/sync_delete", RoutineController, :sync_delete
       put "/sync_update", RoutineController, :sync_update
+      get "/to_csv", RoutineController, :to_csv
     end
 
     post "/sync/started_routine", SyncController, :started_routine
