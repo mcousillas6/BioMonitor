@@ -14,17 +14,17 @@ defmodule BioMonitor.SessionController do
       conn
       |> put_status(:created)
       |> put_resp_header("access-token", session.token)
-      |> render(BioMonitor.UserView, "show.json", user: user)
+      |> render(BioMonitor.UserView, "login.json", user: user, token: session.token)
     else
-      nil -> 
-        conn 
+      nil ->
+        conn
         |> put_status(:not_found)
         |> render(BioMonitor.ErrorView, "404.json")
-      _ -> 
+      _ ->
         conn
         |> put_status(:unauthorized)
         |> render(BioMonitor.ErrorView, "401.json")
-    end 
+    end
   end
 
   def show(conn, _params) do
@@ -36,7 +36,7 @@ defmodule BioMonitor.SessionController do
     do
       conn
       |> put_resp_header("access-token", session.token)
-      |> render(BioMonitor.UserView, "show.json", user: user)    
+      |> render(BioMonitor.UserView, "show.json", user: user)
     else
       nil ->
         conn
@@ -46,7 +46,7 @@ defmodule BioMonitor.SessionController do
         conn
         |> put_status(:unauthorized)
         |> render(BioMonitor.ErrorView, "401.json")
-    end  
+    end
   end
 
   def delete(conn, _params) do
@@ -59,7 +59,7 @@ defmodule BioMonitor.SessionController do
         |> put_status(:ok)
         |> render("delete.json", %{})
     else
-      false -> 
+      false ->
         conn
         |> put_status(:not_found)
         |> render(BioMonitor.ErrorView, "404.json")
@@ -67,10 +67,10 @@ defmodule BioMonitor.SessionController do
         conn
         |> put_status(:unprocessable_entity)
         |> render(BioMonitor.ErrorView, "500")
-      _ -> 
+      _ ->
         conn
         |> put_status(:unauthorized)
         |> render(BioMonitor.ErrorView, "401.json")
-    end 
+    end
   end
 end

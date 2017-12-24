@@ -9,6 +9,13 @@ defmodule BioMonitor.UserView do
     %{user: render_one(user, BioMonitor.UserView, "user.json")}
   end
 
+  def render("login.json", %{user: user, token: token}) do
+     %{
+        user: render_one(user, BioMonitor.UserView, "user.json"),
+        token: token
+      }
+  end
+
   def render("user.json", %{user: user}) do
     %{
       id: user.id,
