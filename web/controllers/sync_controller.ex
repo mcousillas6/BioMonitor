@@ -34,6 +34,23 @@ defmodule BioMonitor.SyncController do
     end
   end
 
+  def batch_reading_insert(conn, %{"routine_uuid" => uuid, "readings" => readings}) do
+    case Repo.get_by(Routine, uuid: uuid) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> render(BioMonitor.ErrorView, "404.json")
+      routine ->
+        readings
+        |> Enum.each(fn reading_params ->
+          Ecto.build_assoc(routine, :readings)
+          |> Reading.changeset(reading_params)
+          |> Repo.insert
+        end)
+        send_resp(conn, :no_content, "")
+      end
+  end
+
   def started_routine(conn, params) do
     Endpoint.broadcast(@routine_channel, @started_msg, params)
     send_resp(conn, :no_content, "")

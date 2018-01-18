@@ -21,7 +21,7 @@ defmodule BioMonitor.Reading do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:temp, :ph, :biomass, :substratum, :product, :routine_id])
+    |> cast(params, [:temp, :ph, :biomass, :substratum, :product, :routine_id, :inserted_at])
     |> validate_required([:temp, :routine_id])
   end
 end
