@@ -40,7 +40,7 @@ defmodule BioMonitor.Routine do
     |> cast_assoc(:temp_ranges, required: false)
     |> cast_assoc(:tags, required: false)
     |> cast_assoc(:log_entries, required: false)
-    |> validate_required([:title, :strain, :medium, :target_temp, :target_ph, :target_density, :estimated_time_seconds])
+    |> validate_required([:title, :strain, :medium, :target_temp, :target_ph, :estimated_time_seconds])
     |> generate_uuid
   end
 
