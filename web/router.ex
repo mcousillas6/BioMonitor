@@ -66,7 +66,7 @@ defmodule BioMonitor.Router do
       put "/sync_update", RoutineController, :sync_update
       get "/to_csv", RoutineController, :to_csv
     end
-
+    post "/sync/all_readings", SyncController, :batch_reading_insert
     post "/sync/started_routine", SyncController, :started_routine
     post "/sync/stopped_routine", SyncController, :stopped_routine
     post "/sync/new_reading", SyncController, :new_reading

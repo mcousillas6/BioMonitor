@@ -31,7 +31,6 @@ defmodule BioMonitor.RoutineController do
         routine = routine |> Repo.preload([:temp_ranges, :tags])
         conn
         |> put_status(:created)
-        |> put_resp_header("location", routine_path(conn, :show, routine))
         |> render("show.json", routine: routine)
       {:error, changeset} ->
         conn
@@ -98,14 +97,14 @@ defmodule BioMonitor.RoutineController do
   end
 
   def sync_update(conn, %{"routine_id" => routine_uuid, "routine" => routine_params}) do
-    with routine = Repo.get_by(Routine, uuid: routine_uuid),
+    with routine = Repo.get_by(Routine, uuid: routine_uuid) |> Repo.preload([[:temp_ranges, :tags, :log_entries]]),
       true <- routine != nil,
       changeset = Routine.changeset(routine, routine_params),
       {:ok, _routine} <- Repo.update(changeset)
     do
       conn
       |> put_status(200)
-      |> render(conn, "show.json", routine: routine)
+      |> render("show.json", routine: routine)
     else
       false ->
         changeset = Routine.changeset(%Routine{}, routine_params)
@@ -113,7 +112,7 @@ defmodule BioMonitor.RoutineController do
           {:ok, routine} ->
             conn
             |> put_status(200)
-            |> render(conn, "show.json", routine: routine)
+            |> render("show.json", routine: routine)
           {:error, changeset} ->
             conn
             |> put_status(422)
