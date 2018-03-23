@@ -3,7 +3,7 @@ defmodule BioMonitor.UserSocket do
 
   ## Channels
   channel "routine", BioMonitor.RoutineChannel
-  channel "sensors", BioMonitor.SensorsChannel
+  channel "sensors", BioMonitor.SensorChannel
   channel "instructions", BioMonitor.InstructionsChannel
 
   ## Transports
