@@ -26,6 +26,7 @@ defmodule BioMonitor.ReadingController do
     with routine = Repo.get(Routine, routine_id),
       true <- routine != nil
     do
+      IO.inspect routine
       case routine.started_date do
         nil ->
           conn

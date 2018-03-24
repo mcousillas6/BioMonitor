@@ -27,7 +27,7 @@ defmodule BioMonitor.SyncController do
       changeset <- Reading.changeset(reading, %{routine_id: routine.id, temp: params["temp"], ph: params["ph"]}),
       {:ok, reading} <- Repo.insert(changeset)
     do
-      Endpoint.broadcast(@routine_channel, @update_msg, reading_to_map(reading))
+      Endpoint.broadcast(@routine_channel, @update_msg, reading_to_map(routine, reading))
       send_resp(conn, :no_content, "")
     else
       _ -> send_resp(conn, :unprocessable_entity, "")
@@ -84,13 +84,16 @@ defmodule BioMonitor.SyncController do
     send_resp(conn, :no_content, "")
   end
 
-  defp reading_to_map(reading) do
+  defp reading_to_map(routine, reading) do
     %{
-      routine_id: reading.routine_id,
+      routine_id: routine.id,
+      routine_uuid: routine.uuid,
       id: reading.id,
       temp: reading.temp,
       ph: reading.ph,
-      density: reading.density,
+      product: reading.product,
+      biomass: reading.biomass,
+      substratum: reading.substratum,
       inserted_at: reading.inserted_at
     }
   end

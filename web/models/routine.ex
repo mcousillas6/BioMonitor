@@ -36,7 +36,7 @@ defmodule BioMonitor.Routine do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :strain, :medium, :target_temp, :target_ph, :estimated_time_seconds, :extra_notes, :uuid, :temp_tolerance, :ph_tolerance, :loop_delay, :balance_ph, :trigger_after, :trigger_for])
+    |> cast(params, [:title, :strain, :medium, :target_temp, :target_ph, :estimated_time_seconds, :extra_notes, :uuid, :temp_tolerance, :ph_tolerance, :loop_delay, :balance_ph, :trigger_after, :trigger_for, :started_date, :started])
     |> cast_assoc(:temp_ranges, required: false)
     |> cast_assoc(:tags, required: false)
     |> cast_assoc(:log_entries, required: false)
