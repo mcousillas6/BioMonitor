@@ -109,6 +109,7 @@ defmodule BioMonitor.SyncController do
       {:ok, struct} ->
         {:ok, struct}
       {:error, _changeset} ->
+        IO.puts "Failed to save start stamp"
         :changeset_error
     end
   end
