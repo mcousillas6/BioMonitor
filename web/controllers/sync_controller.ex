@@ -53,6 +53,10 @@ defmodule BioMonitor.SyncController do
 
   def started_routine(conn, params) do
     Endpoint.broadcast(@routine_channel, @started_msg, params)
+    case Repo.get_by(Routine, uuid: params["uuid"]) do
+      nil -> IO.puts "Failed to update routine #{params["uuid"]}"
+      routine -> save_routine_sart_timestamp(routine)
+    end
     send_resp(conn, :no_content, "")
   end
 
@@ -96,5 +100,16 @@ defmodule BioMonitor.SyncController do
       substratum: reading.substratum,
       inserted_at: reading.inserted_at
     }
+  end
+
+  defp save_routine_sart_timestamp(routine) do
+    changeset = routine
+    |> Routine.started_changeset(%{started: true, started_date: DateTime.utc_now})
+    case Repo.update(changeset) do
+      {:ok, struct} ->
+        {:ok, struct}
+      {:error, _changeset} ->
+        :changeset_error
+    end
   end
 end
