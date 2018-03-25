@@ -97,7 +97,7 @@ defmodule BioMonitor.RoutineController do
   end
 
   def sync_update(conn, %{"routine_id" => routine_uuid, "routine" => routine_params}) do
-    with routine = Repo.get_by(Routine, uuid: routine_uuid) |> Repo.preload([[:temp_ranges, :tags, :log_entries]]),
+    with routine = Repo.get_by(Routine, uuid: routine_uuid) |> Repo.preload([:temp_ranges, :tags, :log_entries]),
       true <- routine != nil,
       changeset = Routine.changeset(routine, routine_params),
       {:ok, _routine} <- Repo.update(changeset)
