@@ -24,9 +24,9 @@ defmodule BioMonitor.Routine do
     field :trigger_after, :integer
     field :trigger_for, :integer
     has_many :readings, BioMonitor.Reading, on_delete: :delete_all
-    has_many :temp_ranges, BioMonitor.TempRange, on_delete: :delete_all
-    has_many :log_entries, BioMonitor.LogEntry, on_delete: :delete_all
-    has_many :tags, BioMonitor.Tag, on_delete: :delete_all
+    has_many :log_entries, BioMonitor.LogEntry, on_delete: :delete_all, on_replace: :delete
+    has_many :temp_ranges, BioMonitor.TempRange, on_delete: :delete_all, on_replace: :delete
+    has_many :tags, BioMonitor.Tag, on_delete: :delete_all, on_replace: :delete
 
     timestamps()
   end
